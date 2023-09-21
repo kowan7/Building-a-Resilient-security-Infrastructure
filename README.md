@@ -1,7 +1,7 @@
 <h1>Microsoft Azure Subscription</h1>
 
 <h2>Description</h2>
-Creating My First Microsoft Azure Account
+Creating My First Microsoft Azure Account and First Resource
 <br />
 
 <h2>Project walk-through:</h2>
