@@ -31,12 +31,61 @@ Use the following command to create a text file for the packets sniffed during t
 <img src="https://imgur.com/UzCMdoM.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 <br />
 <br />
-Sanitization complete:  <br/>
-<img src="https://i.imgur.com/K71yaM2.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+ <h2>Explanation</h2>
+Enter the following command: tcpdump -i eth0 -nntttt -s 0 -w TCPcapture.cap
+ <br />
+ 'tcpdump': command is used for packet capture and network analysis.
+ <br />
+ 'eth0': specifies the name of the network interface to monitor (Linux sniffer).
+ <br />
+ '-nn': These options make `tcpdump` show IP addresses and port numbers in numbers, not names, to speed up the capture process by avoiding DNS and service name lookups.
+ <br />
+ '-tttt': This option sets the timestamp format for captured packets to include microseconds.
+ <br />
+ '-s 0': This option, when set to 0, captures the entire packet, ensuring the full content is recorded. If you specify a value, `tcpdump` will cut off packets at that length.
+ <br />
+ '-w TCPcapture.cap': This option tells `tcpdump` where to save the captured packets. In this case, it saves them to a file called TCPcapture.cap.
+ <br />
+ <br />
+The Linux sniffer is now Listening for packets and analyzing traffic:  <br/>
+<img src="https://imgur.com/I7juYfY.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+<br />
+<br /> Start up the Windows external Attack machine:  <br/>
+ <img src="https://imgur.com/Eozh0nc.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 <br />
 <br />
-Observe the wiped disk:  <br/>
-<img src="https://i.imgur.com/AeZkvFQ.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+Double-click on the LOIC.exe and start up the Low Orbit ION Cannon Software:  <br/>
+<img src="https://imgur.com/N14NRNN.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+ <br />
+ <br />
+ The Low Orbit ION Cannon is configured to TCP Flood the Linux machine. The selected target is set to the IP address of the Pfense router:  <br/>
+ <img src="https://imgur.com/M2ErzMN.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+ <br />
+ <br />
+Return back to the Linux sniffer and observe packets captured from the TCP flood: 
+ <br/>
+ <h2>Explanation</h2>
+ Also, run the command Capinfos TCPcapture.cap
+ <br/>
+ The `capinfos` command tells you details about a captured network file (like `TCPcapture.cap`). 
+  <br/>
+ It shows information like when the capture started, how many packets were recorded, which network interfaces were used, and more. 
+  <br/>
+ It helps you understand what's inside the capture file.
+  <br/>
+  <br/>
+ Start up the Windows external Attack machine:  <br/>
+ <img src="https://imgur.com/Eozh0nc.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+ <br />
+ <br />
+ Start up the Windows external Attack machine:  <br/>
+ <img src="https://imgur.com/Eozh0nc.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+<br />
+ <br />
+ Start up the Windows external Attack machine:  <br/>
+ <img src="https://imgur.com/Eozh0nc.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+
+
 </p>
 
 <!--
