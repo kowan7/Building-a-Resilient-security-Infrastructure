@@ -1,4 +1,4 @@
-<h1>Microsoft Azure Subscription</h1>
+<h1>Performing a Denial of Service Attack from the Wan</h1>
 
 <h2>Description</h2>
 Creating My First Microsoft Azure Account and First Resource
