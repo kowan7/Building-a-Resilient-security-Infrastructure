@@ -62,7 +62,8 @@ Double-click on the LOIC.exe and start up the Low Orbit ION Cannon Software:  <b
  <img src="https://imgur.com/M2ErzMN.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
  <br />
  <br />
-Return back to the Linux sniffer and observe packets captured from the TCP flood: 
+Return to the Linux sniffer click ctl+c and observe packets captured from the TCP flood: 
+ <img src="https://imgur.com/7ezS9zg.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
  <br/>
  <h2>Explanation</h2>
  Also, run the command Capinfos TCPcapture.cap
