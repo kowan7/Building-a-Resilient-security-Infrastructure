@@ -74,18 +74,11 @@ Return to the Linux sniffer click ctl+c and observe packets captured from the TC
   <br/>
  It helps you understand what's inside the capture file.
   <br/>
+ The following steps are repeated to create a UDP Flood and HTTP Flood attack on the network and captured by the Linux sniffer.
   <br/>
- Start up the Windows external Attack machine:  <br/>
- <img src="https://imgur.com/Eozh0nc.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
- <br />
- <br />
- Start up the Windows external Attack machine:  <br/>
- <img src="https://imgur.com/Eozh0nc.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-<br />
- <br />
- Start up the Windows external Attack machine:  <br/>
- <img src="https://imgur.com/Eozh0nc.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-
+   <br/>
+ End of Lab  <br/>
+ 
 
 </p>
 
