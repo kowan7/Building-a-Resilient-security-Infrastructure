@@ -1,93 +1,75 @@
-<h1>Performing a Denial of Service Attack from the Wan Lab</h1>
+# Building a SOC + Honeynet in Azure (Live Traffic)
+![Cloud Honeynet / SOC](https://i.imgur.com/ZWxe03e.jpg)
 
-<h2>Description</h2>
-The laboratory environment comprises an internal network, which includes a Windows server (IP address: 192.168.1.10), a Metasploitable server (IP address: 192.168.1.30), and a Linux sniffer machine without a designated IP address. At the network perimeter, there is a pfSense firewall with an IP address of 203.0.113.100. Additionally, an external Windows 8.1 Attack machine with an external IP address of 175.45.176.200 is present.
+## Introduction
 
-In this experiment, we will utilize a software tool known as "Low Orbit Ion Cannon" (LOIC) to execute TCP, UDP, and HTTP flood attacks on the network. The Linux machine will serve as a packet capture device, allowing us to record the packets generated during each type of flood.
+In this project, I build a mini honeynet in Azure and ingest log sources from various resources into a Log Analytics workspace, which is then used by Microsoft Sentinel to build attack maps, trigger alerts, and create incidents. I measured some security metrics in the insecure environment for 24 hours, apply some security controls to harden the environment, measure metrics for another 24 hours, then show the results below. The metrics we will show are:
 
-It is important to emphasize that LOIC is not a legitimate or legal tool; instead, it is a piece of software commonly associated with malicious activities, specifically Distributed Denial of Service (DDoS) attacks. These attacks involve inundating a target computer system or network with an excessive volume of traffic, thereby rendering it inaccessible to legitimate users. LOIC is just one of the tools that can be exploited to carry out such attacks.
-<br />
+- SecurityEvent (Windows Event Logs)
+- Syslog (Linux Event Logs)
+- SecurityAlert (Log Analytics Alerts Triggered)
+- SecurityIncident (Incidents created by Sentinel)
+- AzureNetworkAnalytics_CL (Malicious Flows allowed into our honeynet)
 
-<h2>Project walk-through:</h2>
+## Architecture Before Hardening / Security Controls
+![Architecture Diagram](https://i.imgur.com/aBDwnKb.jpg)
 
-<p align="center">
-Lab Topology: <br/>
-<img src="https://imgur.com/9qQbUOC.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-<br />
-<br />
-Start by accessing the Linux Sniffer machine  <br/>
-<img src="https://imgur.com/3JqTn6y.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-<br />
-<br />
-Open the Linux terminal and determine the IP Address for the Sniffer Machine: <br/>
-<img src="https://imgur.com/ogm0CQV.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-<br />
-<br />
-Use the following command to remove the IP address of the Linux Sniffer machine:  <br/>
-<img src="https://imgur.com/CIKFPJm.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-<br />
-<br />
-Use the following command to create a text file for the packets sniffed during the DDOS Attacks:  <br/>
-<img src="https://imgur.com/UzCMdoM.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-<br />
-<br />
- <h2>Explanation</h2>
-Enter the following command: tcpdump -i eth0 -nntttt -s 0 -w TCPcapture.cap
- <br />
- 'tcpdump': command is used for packet capture and network analysis.
- <br />
- 'eth0': specifies the name of the network interface to monitor (Linux sniffer).
- <br />
- '-nn': These options make `tcpdump` show IP addresses and port numbers in numbers, not names, to speed up the capture process by avoiding DNS and service name lookups.
- <br />
- '-tttt': This option sets the timestamp format for captured packets to include microseconds.
- <br />
- '-s 0': This option, when set to 0, captures the entire packet, ensuring the full content is recorded. If you specify a value, `tcpdump` will cut off packets at that length.
- <br />
- '-w TCPcapture.cap': This option tells `tcpdump` where to save the captured packets. In this case, it saves them to a file called TCPcapture.cap.
- <br />
- <br />
-The Linux sniffer is now Listening for packets and analyzing traffic:  <br/>
-<img src="https://imgur.com/I7juYfY.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-<br />
-<br /> Start up the Windows external Attack machine:  <br/>
- <img src="https://imgur.com/Eozh0nc.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-<br />
-<br />
-Double-click on the LOIC.exe and start up the Low Orbit ION Cannon Software:  <br/>
-<img src="https://imgur.com/N14NRNN.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
- <br />
- <br />
- The Low Orbit ION Cannon is configured to TCP Flood the Linux machine. The selected target is set to the IP address of the Pfense router:  <br/>
- <img src="https://imgur.com/M2ErzMN.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
- <br />
- <br />
-Return to the Linux sniffer click ctl+c and observe packets captured from the TCP flood: 
- <img src="https://imgur.com/7ezS9zg.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
- <br/>
- <h2>Explanation</h2>
- Also, run the command Capinfos TCPcapture.cap
- <br/>
- The `capinfos` command tells you details about a captured network file (like `TCPcapture.cap`). 
-  <br/>
- It shows information like when the capture started, how many packets were recorded, which network interfaces were used, and more. 
-  <br/>
- It helps you understand what's inside the capture file.
-  <br/>
- The following steps are repeated to create a UDP Flood and HTTP Flood attack on the network and captured by the Linux sniffer.
-  <br/>
-   <br/>
- End of Lab  <br/>
- 
+## Architecture After Hardening / Security Controls
+![Architecture Diagram](https://i.imgur.com/YQNa9Pp.jpg)
 
-</p>
+The architecture of the mini honeynet in Azure consists of the following components:
 
-<!--
- ```diff
-- text in red
-+ text in green
-! text in orange
-# text in gray
-@@ text in purple (and bold)@@
-```
---!>
+- Virtual Network (VNet)
+- Network Security Group (NSG)
+- Virtual Machines (2 windows, 1 linux)
+- Log Analytics Workspace
+- Azure Key Vault
+- Azure Storage Account
+- Microsoft Sentinel
+
+For the "BEFORE" metrics, all resources were originally deployed, exposed to the internet. The Virtual Machines had both their Network Security Groups and built-in firewalls wide open, and all other resources are deployed with public endpoints visible to the Internet; aka, no use for Private Endpoints.
+
+For the "AFTER" metrics, Network Security Groups were hardened by blocking ALL traffic with the exception of my admin workstation, and all other resources were protected by their built-in firewalls as well as Private Endpoint
+
+## Attack Maps Before Hardening / Security Controls
+![NSG Allowed Inbound Malicious Flows](https://i.imgur.com/1qvswSX.png)<br>
+![Linux Syslog Auth Failures](https://i.imgur.com/G1YgZt6.png)<br>
+![Windows RDP/SMB Auth Failures](https://i.imgur.com/ESr9Dlv.png)<br>
+
+## Metrics Before Hardening / Security Controls
+
+The following table shows the metrics we measured in our insecure environment for 24 hours:
+Start Time 2023-03-15 17:04:29
+Stop Time 2023-03-16 17:04:29
+
+| Metric                   | Count
+| ------------------------ | -----
+| SecurityEvent            | 19470
+| Syslog                   | 3028
+| SecurityAlert            | 10
+| SecurityIncident         | 348
+| AzureNetworkAnalytics_CL | 843
+
+## Attack Maps Before Hardening / Security Controls
+
+```All map queries actually returned no results due to no instances of malicious activity for the 24 hour period after hardening.```
+
+## Metrics After Hardening / Security Controls
+
+The following table shows the metrics we measured in our environment for another 24 hours, but after we have applied security controls:
+Start Time 2023-03-18 15:37
+Stop Time	2023-03-19 15:37
+
+| Metric                   | Count
+| ------------------------ | -----
+| SecurityEvent            | 8778
+| Syslog                   | 25
+| SecurityAlert            | 0
+| SecurityIncident         | 0
+| AzureNetworkAnalytics_CL | 0
+
+## Conclusion
+
+In this project, a mini honeynet was constructed in Microsoft Azure and log sources were integrated into a Log Analytics workspace. Microsoft Sentinel was employed to trigger alerts and create incidents based on the ingested logs. Additionally, metrics were measured in the insecure environment before security controls were applied, and then again after implementing security measures. It is noteworthy that the number of security events and incidents were drastically reduced after the security controls were applied, demonstrating their effectiveness.
+
+It is worth noting that if the resources within the network were heavily utilized by regular users, it is likely that more security events and alerts may have been generated within the 24-hour period following the implementation of the security controls.
