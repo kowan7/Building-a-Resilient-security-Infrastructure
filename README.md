@@ -1,6 +1,5 @@
-# Building a Resilient Security Infrastructure: Microsoft Azure SOC and Honeynet Lab
-![Cloud Honeynet / SOC](https://i.imgur.com/ZWxe03e.jpg)
-
+# Microsoft Azure SOC and Honeynet Lab
+![Architecture Diagram]https://imgur.com/VaNOjoK
 ## Introduction
 
 In this project, I build a mini honeynet in Azure and ingest log sources from various resources into a Log Analytics workspace, which is then used by Microsoft Sentinel to build attack maps, trigger alerts, and create incidents. I measured some security metrics in the insecure environment for 24 hours, apply some security controls to harden the environment, measure metrics for another 24 hours, then show the results below. The metrics we will show are:
