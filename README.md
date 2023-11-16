@@ -1,17 +1,20 @@
 # Microsoft Azure SOC and Honeynet Lab
-![Architecture Diagram]https://imgur.com/VaNOjoK
+<<img src="https://imgur.com/nP8qbly.png" height="100%" width="100%" alt="Disk Sanitization Steps"/>
+
+
+
 ## Introduction
 
-In this project, I build a mini honeynet in Azure and ingest log sources from various resources into a Log Analytics workspace, which is then used by Microsoft Sentinel to build attack maps, trigger alerts, and create incidents. I measured some security metrics in the insecure environment for 24 hours, apply some security controls to harden the environment, measure metrics for another 24 hours, then show the results below. The metrics we will show are:
+In this project, I constructed a compact honeynet within the Microsoft Azure environment, seamlessly integrating log sources from diverse platforms into a Log Analytics workspace. This meticulously curated data was subsequently harnessed by Microsoft Sentinel to craft comprehensive attack maps, generate alerts, and curate detailed incident reports. Over a 24-hour period, I systematically gauged pertinent security metrics within the initially insecure environment, providing a baseline for subsequent evaluation. Following this assessment, a series of targeted security controls were implemented to fortify the system's resilience. Another 24-hour metric measurement cycle ensued, capturing the impact of the applied security measures on the environment's overall security posture. The results of this comparative analysis offer valuable insights into the effectiveness of the implemented controls and their influence on the observed security metrics. In this comprehensive exploration, I delve into key security indicators, shedding light on the dynamic evolution of the security landscape within the Azure-based honeynet environment. The metrics we will show include:
 
-- SecurityEvent (Windows Event Logs)
-- Syslog (Linux Event Logs)
+- SecurityEvent (Windows Event Logs) 
+- Syslog (Linux Event Logs) 
 - SecurityAlert (Log Analytics Alerts Triggered)
 - SecurityIncident (Incidents created by Sentinel)
 - AzureNetworkAnalytics_CL (Malicious Flows allowed into our honeynet)
 
 ## Architecture Before Hardening / Security Controls
-![Architecture Diagram](https://i.imgur.com/aBDwnKb.jpg)
+<<img src="https://imgur.com/3uESg96.png" height="100%" width="100%" alt="Disk Sanitization Steps"/>
 
 ## Architecture After Hardening / Security Controls
 ![Architecture Diagram](https://i.imgur.com/YQNa9Pp.jpg)
