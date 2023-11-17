@@ -1,5 +1,5 @@
 # Microsoft Azure SOC and Honeynet Lab
-<<img src="https://imgur.com/nP8qbly.png" height="100%" width="100%" alt="Disk Sanitization Steps"/>
+<img src="https://imgur.com/nP8qbly.png" height="100%" width="100%" alt="Disk Sanitization Steps"/>
 
 
 
@@ -13,65 +13,76 @@ In this project, I constructed a compact honeynet within the Microsoft Azure env
 - SecurityIncident (Incidents created by Sentinel)
 - AzureNetworkAnalytics_CL (Malicious Flows allowed into our honeynet)
 
-## Architecture Before Hardening / Security Controls
-<<img src="https://imgur.com/3uESg96.png" height="100%" width="100%" alt="Disk Sanitization Steps"/>
+## Architecture Before Hardening / Security Controls<BR>
+
+<img src="https://imgur.com/3uESg96.png" height="100%" width="100%" alt="Disk Sanitization Steps"/>
+In deliberately configuring the firewalls or network security groups on the virtual machines to be wide open, the intention is to create an enticing environment for ethical hacking or penetration testing purposes. This strategic decision serves a dual purpose: first, it simulates a scenario where the virtual network mimics a vulnerable system, similar to real-world scenarios where inadequate security configurations may be exploited. This simulated vulnerability provides a controlled space for ethical hackers to assess and identify potential weaknesses.
+
+Intentionally exposing the virtual machines with lenient firewall settings, encourages active attempts by hackers to exploit these vulnerabilities. This proactive engagement aids in the identification and analysis of potential threat vectors and attack patterns. The insights gained from such simulated attacks contribute significantly to the enhancement of security measures, allowing for the refinement of defensive strategies, incident response protocols, and the overall fortification of the virtual network against real-world cyber threats.
+
+It is important to note that this approach should only be undertaken in a controlled, ethical, and monitored environment to ensure that the simulated attacks do not pose any actual risks to sensitive data or systems. The ultimate goal is to strengthen the security posture of the virtual network through the identification and mitigation of potential vulnerabilities.
 
 ## Architecture After Hardening / Security Controls
-![Architecture Diagram](https://i.imgur.com/YQNa9Pp.jpg)
+<img src="https://imgur.com/VIUbiId.png" height="100%" width="100%" alt="Disk Sanitization Steps"/>
 
-The architecture of the mini honeynet in Azure consists of the following components:
+The architecture of the mini honeynet in Azure encompasses several key components, including:
 
 - Virtual Network (VNet)
 - Network Security Group (NSG)
-- Virtual Machines (2 windows, 1 linux)
+- Virtual Machines (2 Windows, 1 Linux)
 - Log Analytics Workspace
 - Azure Key Vault
 - Azure Storage Account
 - Microsoft Sentinel
 
-For the "BEFORE" metrics, all resources were originally deployed, exposed to the internet. The Virtual Machines had both their Network Security Groups and built-in firewalls wide open, and all other resources are deployed with public endpoints visible to the Internet; aka, no use for Private Endpoints.
+In the refined configuration ("AFTER" metrics), notable improvements were implemented in security measures. Network Security Groups were strengthened by blocking ALL traffic, allowing communication exclusively with my Private Virtual Network. Moreover, all other resources were bolstered with their built-in firewalls, and communication was strictly confined to the internal private virtual network. This thorough security update aims to minimize potential risks, guaranteeing that access is restricted solely to authorized entities within the bounds of the internal private virtual network. These measures adhere to industry best practices and significantly enhance the security posture of the mini honeynet environment in Azure.
 
-For the "AFTER" metrics, Network Security Groups were hardened by blocking ALL traffic with the exception of my admin workstation, and all other resources were protected by their built-in firewalls as well as Private Endpoint
+## NSG-Malicious-Allowed-in
+<img src="https://imgur.com/nngjJBR.png" height="70%" width="70%" alt="Disk Sanitization Steps"/>
 
-## Attack Maps Before Hardening / Security Controls
-![NSG Allowed Inbound Malicious Flows](https://i.imgur.com/1qvswSX.png)<br>
-![Linux Syslog Auth Failures](https://i.imgur.com/G1YgZt6.png)<br>
-![Windows RDP/SMB Auth Failures](https://i.imgur.com/ESr9Dlv.png)<br>
+## Linux-SSH-Auth-Fail
+<img src="https://imgur.com/ODqxutg.png" height="70%" width="70%" alt="Disk Sanitization Steps"/>
+
+## MSSQL-Auth-Fail
+<img src="https://imgur.com/JqfC5bA.png" height="70%" width="70%" alt="Disk Sanitization Steps"/>
+
+## Windows-RDP-Auth-Fails
+<img src="https://imgur.com/W3BTWV7.png" height="70%" width="70%" alt="Disk Sanitization Steps"/>
 
 ## Metrics Before Hardening / Security Controls
-
 The following table shows the metrics we measured in our insecure environment for 24 hours:
-Start Time 2023-03-15 17:04:29
-Stop Time 2023-03-16 17:04:29
+Start Time 11-08-2023 18:02:44
+Stop Time 11-09-2023 18:02:45
 
-| Metric                   | Count
-| ------------------------ | -----
-| SecurityEvent            | 19470
-| Syslog                   | 3028
-| SecurityAlert            | 10
-| SecurityIncident         | 348
-| AzureNetworkAnalytics_CL | 843
+| Metric                                                         | Count
+| -------------------------------------------------------------- | -----
+| SecurityEvent (windows-Vm)                                     | 66,985
+| Syslog (Linux-VM)                                              | 1,449
+| SecurityAlert (Microsoft Fedender for Cloud)                   | 6
+| SecurityIncident (Sentinel Incidents)                          | 146
+| AzureNetworkAnalytics_CL (NSG Inbound Malicious Flows Allowed) | 2,646
 
-## Attack Maps Before Hardening / Security Controls
-
-```All map queries actually returned no results due to no instances of malicious activity for the 24 hour period after hardening.```
 
 ## Metrics After Hardening / Security Controls
 
 The following table shows the metrics we measured in our environment for another 24 hours, but after we have applied security controls:
-Start Time 2023-03-18 15:37
-Stop Time	2023-03-19 15:37
+Start Time 11-13-2023 16:28:27
+Stop Time	11-14-2023 16:28:27
 
-| Metric                   | Count
-| ------------------------ | -----
-| SecurityEvent            | 8778
-| Syslog                   | 25
-| SecurityAlert            | 0
-| SecurityIncident         | 0
-| AzureNetworkAnalytics_CL | 0
+| Metric                                                         | Count
+| -------------------------------------------------------------- | -----
+| SecurityEvent (windows-Vm)                                     | 0
+| Syslog (Linux-VM)                                              | 1
+| SecurityAlert (Microsoft Fedender for Cloud)                   | 0
+| SecurityIncident (Sentinel Incidents)                          | 0
+| AzureNetworkAnalytics_CL (NSG Inbound Malicious Flows Allowed) | 0
 
 ## Conclusion
 
-In this project, a mini honeynet was constructed in Microsoft Azure and log sources were integrated into a Log Analytics workspace. Microsoft Sentinel was employed to trigger alerts and create incidents based on the ingested logs. Additionally, metrics were measured in the insecure environment before security controls were applied, and then again after implementing security measures. It is noteworthy that the number of security events and incidents were drastically reduced after the security controls were applied, demonstrating their effectiveness.
+In the culmination of this project, the construction of a mini honeynet within the Microsoft Azure environment marked a pivotal step towards fortifying the cybersecurity infrastructure. The integration of log sources into a centralized Log Analytics workspace facilitated a comprehensive and centralized approach to monitoring and analyzing security-related events. The deployment of Microsoft Sentinel as a vigilant guardian further heightened the project's efficacy, autonomously triggering alerts and orchestrating incident responses based on the rich data sets ingested.
 
-It is worth noting that if the resources within the network were heavily utilized by regular users, it is likely that more security events and alerts may have been generated within the 24-hour period following the implementation of the security controls.
+A crucial facet of the project involved the meticulous measurement of security metrics within the initial, insecure environment, providing a baseline for comparison. Subsequent to the strategic implementation of security controls, the environment underwent a transformation. The measured metrics post-implementation revealed a substantial reduction in both security events and incidents, underscoring the tangible impact of the applied security measures.
+
+This noteworthy decline in security events and incidents serves as compelling evidence of the effectiveness of the implemented security controls. The project not only demonstrated the capability of Microsoft Azure, Log Analytics, and Sentinel in creating a resilient security ecosystem but also emphasized the tangible outcomes achievable through proactive cybersecurity measures. These results affirm the significance of continuous monitoring, timely incident response, and the implementation of robust security controls in safeguarding digital environments against evolving cyber threats.
+
+## The End
